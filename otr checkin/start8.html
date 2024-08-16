@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Driver Check-In</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background-color: #ffffff; /* White background */
+            color: #ffc220; /* Yellow text */
+            text-align: center; /* Center text */
+        }
+    
+        h1, h2 {
+            color: #ffc220; /* Yellow text */
+            text-align: center;
+        }
+    
+        p {
+            margin-bottom: 1.5em;
+        }
+    
+        .container {
+            background: #0071ce; /* Entry screen box background */
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 2px solid #ffc220; /* Yellow border */
+            position: relative;
+        }
+    
+        select, input[type="text"], input[type="number"], input[type="file"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ffc220; /* Yellow border */
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #ffffff; /* White background */
+            color: #000000; /* Black text */
+            font-family: Arial, sans-serif; /* Set font to Arial */
+            text-align: center; /* Center text */
+        }
+    
+        textarea {
+            resize: none; /* Disable resizing */
+            height: 200px; /* Fixed height */
+        }
+    
+        button {
+            background-color: #ffc220; /* Yellow background */
+            color: #000000; /* Black text */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    
+        button:hover {
+            background-color: #ffdd57; /* Lighter yellow on hover */
+        }
+    
+        .home-button, .back-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    
+        .home-button i, .back-button i {
+            color: #ffc220; /* Yellow color for icon */
+            font-size: 24px;
+        }
+    
+        .home-button:hover i, .back-button:hover i {
+            color: #ffdd57; /* Lighter yellow on hover */
+        }
+    
+        .hidden {
+            display: none;
+        }
+    
+        .instructions-textbox {
+            background-color: #ffffff; /* White background */
+            border: 1px solid #ffc220; /* Yellow border */
+            color: #000000; /* Black text */
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px; /* Add space below the text box */
+            border-radius: 5px;
+            font-family: Arial, sans-serif; /* Match font with the rest of the site */
+            line-height: 1.6; /* Match line height */
+            text-align: center; /* Center text */
+        }
+    
+        .safety-content {
+            display: flex;
+            flex-direction: column; /* Adjusted for mobile view */
+            align-items: center; /* Centered items for better mobile view */
+        }
+    
+        .image-section {
+            text-align: center;
+        }
+    
+        .image-section img {
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 10px;
+            border: 2px solid #ffc220; /* Yellow border */
+        }
+    
+        .text-section {
+            flex: 1;
+            margin-right: 0; /* Removed right margin for mobile view */
+        }
+    
+        .centered-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    
+        .centered-form-container {
+            display: flex;
+            justify-content: center;
+        }
+    
+        .centered-form label, .centered-form input[type="text"], .centered-form button {
+            width: 100%;
+            max-width: 300px;
+        }
+    
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            background-color: #ffffff; /* White background */
+            color: #0071ce; /* Blue text */
+            font-size: 14px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold; /* Bold text */
+        }
+
+        .direction-textbox {
+            background-color: #ffffff; /* White background */
+            border: 1px solid #ffc220; /* Yellow border */
+            color: #000000; /* Black text */
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            text-align: center; /* Center text */
+        }
+
+        .information-screen {
+            display: none;
+            background: #0071ce; /* Background for the info screen */
+            padding: 20px;
+            border-radius: 5px;
+            border: 2px solid #ffc220; /* Yellow border */
+            color: #ffc220; /* Yellow text */
+            text-align: center; /* Center text */
+        }
+
+        /* Media Queries for Mobile Screens */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+    
+            .instructions-textbox, .direction-textbox {
+                font-size: 14px; /* Adjust font size for readability on small screens */
+            }
+    
+            .image-section img {
+                max-width: 100%; /* Ensure images fit within the mobile screen */
+            }
+    
+            .safety-content {
+                flex-direction: column;
+            }
+    
+            .text-section {
+                margin-right: 0;
+            }
+    
+            .home-button, .back-button {
+                top: 5px;
+                right: 5px;
+            }
+    
+            button {
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Home Page -->
+        <div id="home-page" class="container hidden">
+            <button class="home-button" onclick="goToHome()">
+                <i class="fas fa-home"></i>
+            </button>
+            <h2 id="home-title">Home Page</h2>
+            <img src="map_image.jpg" alt="Parking Lot Map" style="width:100%; max-height: 500px; object-fit: cover;">
+            <p id="home-key">Key: Translated into selected language.</p>
+        </div>
+
+        <!-- Language Selection Screen -->
+        <div id="language-selection" class="container">
+            <button class="home-button" onclick="goToHome()">
+                <i class="fas fa-home"></i>
+            </button>
+            <h2 id="language-title">Select Language</h2>
+            <form id="language-form">
+                <label for="language" id="language-label">Choose a language:</label>
+                <select id="language-select" onchange="selectLanguage()">
+                    <option value="en">English</option>
+                    <option value="fr">French</option>
+                    <option value="es">Spanish</option>
+                </select>
+                <button type="button" onclick="goToSafetyGuidelines()" id="next-button">Next</button>
+            </form>
+        </div>
+
+        <!-- Safety Guidelines Screen -->
+        <div id="safety-guidelines" class="container hidden">
+            <button class="home-button" onclick="goToHome()">
+                <i class="fas fa-home"></i>
+            </button>
+            <h2 id="safety-title">Safety Guidelines</h2>
+            <div class="safety-content">
+                <div class="text-section">
+                    <p id="safety-text">Please read and acknowledge the safety guidelines below:</p>
+                    <div class="instructions-textbox" id="instructions-textbox">
+                        <p id="guideline1">1. Follow the posted speed limits.</p>
+                        <p id="guideline2">2. Always wear your seatbelt while driving.</p>
+                        <p id="guideline3">3. Follow all posted signs and instructions.</p>
+                        <p id="guideline4">4. Do not use your phone while driving.</p>
+                        <p id="guideline5">5. Report any hazards or unsafe conditions immediately.</p>
+                    </div>
+                    <form id="safety-acknowledgment-form" class="centered-form">
+                        <label for="initials" id="initials-label">Enter your initials to acknowledge the safety guidelines:</label>
+                        <input type="text" id="initials" name="initials" required>
+                        <button type="button" id="acknowledge-button" onclick="acknowledgeSafetyGuidelines()">Acknowledge</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dock Door Number Screen -->
+        <div id="dock-door" class="container hidden">
+            <button class="home-button" onclick="goToHome()">
+                <i class="fas fa-home"></i>
+            </button>
+            <h2 id="dock-door-title">Enter Dock Door Number</h2>
+            <form id="dock-door-form" class="centered-form">
+                <label for="door-number">Enter your dock door number (0-71):</label>
+                <input type="number" id="door-number" name="door-number" min="0" max="71" required>
+                <button type="button" id="submit-door-button" onclick="submitDockDoor()">Submit</button>
+            </form>
+        </div>
+
+        <!-- Direction Screens -->
+        <div id="direction-screen" class="container hidden">
+            <button class="home-button" onclick="goToHome()">
+                <i class="fas fa-home"></i>
+            </button>
+            <h2 id="direction-title">Directions</h2>
+            <p id="direction-text">Follow the directions below based on your dock door number:</p>
+            <div class="direction-textbox" id="direction-textbox">
+                <p id="direction-instructions"></p>
+            </div>
+            <button type="button" id="arrival-button" onclick="arrivedAtDoor()">I've arrived</button>
+        </div>
+
+        <!-- Information Screen -->
+        <div id="information-screen" class="information-screen hidden">
+            <h2>Next Steps</h2>
+            <p>Please get out of your vehicle, walk to the Central Receiving Office (CRO), and follow the safety guidelines.</p>
+            <button type="button" onclick="goToHome()">Back to Home</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        Access a map of the yard by clicking the home button in the top right. If you have any concerns or issues please contact the Central Receiving Office at ###-###-####.
+    </div>
+
+
+    <script>
+        function goToHome() {
+    document.getElementById('language-selection').classList.add('hidden');
+    document.getElementById('safety-guidelines').classList.add('hidden');
+    document.getElementById('dock-door').classList.add('hidden');
+    document.getElementById('direction-screen').classList.add('hidden');
+    document.getElementById('information-screen').classList.add('hidden');
+    document.getElementById('home-page').classList.remove('hidden');
+}
+
+function goToSafetyGuidelines() {
+    document.getElementById('language-selection').classList.add('hidden');
+    document.getElementById('safety-guidelines').classList.remove('hidden');
+}
+
+function acknowledgeSafetyGuidelines() {
+    const initials = document.getElementById('initials').value;
+    if (initials.trim() !== '') {
+        document.getElementById('safety-guidelines').classList.add('hidden');
+        document.getElementById('dock-door').classList.remove('hidden');
+    } else {
+        alert('Please enter your initials to acknowledge the safety guidelines.');
+    }
+}
+
+function submitDockDoor() {
+    const doorNumber = document.getElementById('door-number').value;
+    if (doorNumber.trim() === '' || doorNumber < 0 || doorNumber > 71) {
+        alert('Please enter a valid dock door number between 0 and 71.');
+        return;
+    }
+    document.getElementById('dock-door').classList.add('hidden');
+    document.getElementById('direction-screen').classList.remove('hidden');
+    displayDirections(doorNumber);
+}
+
+function displayDirections(doorNumber) {
+    let instructions = '';
+    if (doorNumber === '0') {
+        instructions = 'Please proceed to the waiting area.';
+    } else if (doorNumber >= 1 && doorNumber <= 33) {
+        instructions = 'Please follow the white arrows to your assigned dock door.';
+    } else if (doorNumber >= 34 && doorNumber <= 71) {
+        instructions = 'Please follow the yellow arrows to your assigned dock door.';
+    }
+    document.getElementById('direction-instructions').textContent = instructions;
+}
+
+function arrivedAtDoor() {
+    console.log('Arrival button clicked'); // Log to check if function is triggered
+    document.getElementById('direction-screen').classList.add('hidden');
+    document.getElementById('information-screen').classList.remove('hidden');
+}
+
+function selectLanguage() {
+    const language = document.getElementById('language-select').value;
+    // Add translation logic here
+    // Change text content based on selected language
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('language-selection').classList.remove('hidden');
+});
+
+    </script>
+</body>
+</html>

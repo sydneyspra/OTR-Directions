@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Driver Check-In</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background-color: #ffffff; /* White background */
+            color: #ffc220; /* Yellow text */
+        }
+    
+        h1, h2 {
+            color: #ffc220; /* Yellow text */
+            text-align: center;
+        }
+    
+        p {
+            margin-bottom: 1.5em;
+        }
+    
+        .container {
+            background: #0071ce; /* Entry screen box background */
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 2px solid #ffc220; /* Yellow border */
+            position: relative;
+        }
+    
+        select, input[type="text"], input[type="number"], input[type="file"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ffc220; /* Yellow border */
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #ffffff; /* White background */
+            color: #000000; /* Black text */
+            font-family: Arial, sans-serif; /* Set font to Arial */
+        }
+    
+        textarea {
+            resize: none; /* Disable resizing */
+            height: 200px; /* Fixed height */
+        }
+    
+        button {
+            background-color: #ffc220; /* Yellow background */
+            color: #000000; /* Black text */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    
+        button:hover {
+            background-color: #ffdd57; /* Lighter yellow on hover */
+        }
+    
+        .home-button, .back-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    
+        .home-button i, .back-button i {
+            color: #ffc220; /* Yellow color for icon */
+            font-size: 24px;
+        }
+    
+        .home-button:hover i, .back-button:hover i {
+            color: #ffdd57; /* Lighter yellow on hover */
+        }
+    
+        .hidden {
+            display: none;
+        }
+    
+        .instructions-textbox {
+            background-color: #ffffff; /* White background */
+            border: 1px solid #ffc220; /* Yellow border */
+            color: #000000; /* Black text */
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px; /* Add space below the text box */
+            border-radius: 5px;
+            font-family: Arial, sans-serif; /* Match font with the rest of the site */
+            line-height: 1.6; /* Match line height */
+        }
+    
+        .safety-content {
+            display: flex;
+            flex-direction: column; /* Adjusted for mobile view */
+            align-items: center; /* Centered items for better mobile view */
+        }
+    
+        .image-section {
+            text-align: center;
+        }
+    
+        .image-section img {
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 10px;
+            border: 2px solid #ffc220; /* Yellow border */
+        }
+    
+        .text-section {
+            flex: 1;
+            margin-right: 0; /* Removed right margin for mobile view */
+        }
+    
+        .centered-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    
+        .centered-form-container {
+            display: flex;
+            justify-content: center;
+        }
+    
+        .centered-form label, .centered-form input[type="text"], .centered-form button {
+            width: 100%;
+            max-width: 300px;
+        }
+    
+        /* Media Queries for Mobile Screens */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+    
+            .instructions-textbox {
+                font-size: 14px; /* Adjust font size for readability on small screens */
+            }
+    
+            .image-section img {
+                max-width: 100%; /* Ensure images fit within the mobile screen */
+            }
+    
+            .safety-content {
+                flex-direction: column;
+            }
+    
+            .text-section {
+                margin-right: 0;
+            }
+    
+            .home-button, .back-button {
+                top: 5px;
+                right: 5px;
+            }
+    
+            button {
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Home Page -->
+        <div id="home-page" class="container hidden">
+            <button class="home-button" onclick="goToHome()">
+                <i class="fas fa-home"></i>
+            </button>
+            <h2 id="home-title">Home Page</h2>
+            <img src="map_image.jpg" alt="Parking Lot Map" style="width:100%; max-height: 500px; object-fit: cover;">
+            <p id="home-key">Key: Translated into selected language.</p>
+        </div>
+
+        <!-- Language Selection Screen -->
+        <div id="language-selection" class="container">
+            <button class="home-button" onclick="goToHome()">
+                <i class="fas fa-home"></i>
+            </button>
+            <h2 id="language-title">Select Language</h2>
+            <form id="language-form">
+                <label for="language" id="language-label">Choose a language:</label>
+                <select id="language-select" onchange="selectLanguage()">
+                    <option value="en">English</option>
+                    <option value="fr">French</option>
+                    <option value="es">Spanish</option>
+                </select>
+                <button type="button" onclick="goToSafetyGuidelines()" id="next-button">Next</button>
+            </form>
+        </div>
+
+        <!-- Safety Guidelines Screen -->
+        <div id="safety-guidelines" class="container hidden">
+            <button class="home-button" onclick="goToHome()">
+                <i class="fas fa-home"></i>
+            </button>
+            <h2 id="safety-title">Safety Guidelines</h2>
+            <div class="safety-content">
+                <div class="text-section">
+                    <p id="safety-text">Please read and acknowledge the safety guidelines below:</p>
+                    <div class="instructions-textbox" id="instructions-textbox">
+                        <p id="guideline1">1. Follow the posted speed limits.</p>
+                        <p id="guideline2">2. Always wear your seatbelt while driving.</p>
+                        <p id="guideline3">3. Follow all posted signs and instructions.</p>
+                        <p id="guideline4">4. Do not use your phone while driving.</p>
+                        <p id="guideline5">5. Report any hazards or unsafe conditions immediately.</p>
+                    </div>
+                    <form id="safety-acknowledgment-form">
+                        <label for="initials" id="initials-label">Enter your initials to acknowledge the safety guidelines:</label>
+                        <input type="text" id="initials" name="initials" required>
+                        <button type="button" id="acknowledge-button" onclick="acknowledgeSafetyGuidelines()">Acknowledge</button>
+                    </form>
+                </div>
+                <div class="image-section">
+                    <img src="your-safety-image.png" alt="Safety Guidelines Image">
+                </div>
+            </div>
+        </div>
+
+        <!-- Dock Door Entry Screen -->
+        <div id="dock-door" class="container hidden">
+            <button class="home-button" onclick="goToHome()">
+                <i class="fas fa-home"></i>
+            </button>
+            <h2 id="dock-title">Enter Dock Door Number</h2>
+            <form id="dock-door-form" class="centered-form">
+                <label for="dock-number" id="dock-label">Door Number:</label>
+                <input type="number" id="dock-number" name="dock-number" required>
+                <button type="button" id="submit-dock-button" onclick="submitDockNumber()">Submit</button>
+            </form>
+        </div>
+
+        <!-- Directions Screen -->
+        <div id="directions" class="container hidden">
+            <button class="home-button" onclick="goToHome()">
+                <i class="fas fa-home"></i>
+            </button>
+            <h2 id="directions-title">Directions</h2>
+            <p id="directions-text">Follow these directions to your dock door:</p>
+            <!-- Add directions here -->
+        </div>
+
+        <!-- Upload Images Screen -->
+        <div id="upload-images" class="container hidden">
+            <button class="home-button" onclick="goToHome()">
+                <i class="fas fa-home"></i>
+            </button>
+            <h2 id="upload-title">Upload Images</h2>
+            <form id="upload-form" class="centered-form">
+                <label for="image-upload" id="upload-label">Upload images:</label>
+                <input type="file" id="image-upload" name="image-upload[]" multiple>
+                <button type="button" id="upload-button" onclick="uploadImages()">Upload</button>
+            </form>
+        </div>
+
+        <!-- Invalid Gate Number Screen -->
+        <div id="invalid-gate-number" class="container hidden">
+            <button class="home-button" onclick="goToHome()">
+                <i class="fas fa-home"></i>
+            </button>
+            <h2 id="invalid-gate-title">Invalid Gate Number</h2>
+            <p id="invalid-gate-text">The gate number you entered is invalid. Please try again.</p>
+            <button type="button" onclick="goBack()">Go Back</button>
+        </div>
+    </div>
+
+    <script>
+        // Language data
+        const translations = {
+            en: {
+                "page-title": "Driver Check-In",
+                "home-title": "Home Page",
+                "home-key": "Key: Translated into selected language.",
+                "language-title": "Select Language",
+                "language-label": "Choose a language:",
+                "next-button": "Next",
+                "safety-title": "Safety Guidelines",
+                "safety-text": "Please read and acknowledge the safety guidelines below:",
+                "instructions-textbox": "1. Follow the posted speed limits.\n2. Always wear your seatbelt while driving.\n3. Follow all posted signs and instructions.\n4. Do not use your phone while driving.\n5. Report any hazards or unsafe conditions immediately.",
+                "initials-label": "Enter your initials to acknowledge the safety guidelines:",
+                "acknowledge-button": "Acknowledge",
+                "dock-title": "Enter Dock Door Number",
+                "dock-label": "Door Number:",
+                "submit-dock-button": "Submit",
+                "directions-title": "Directions",
+                "directions-text": "Follow these directions to your dock door:",
+                "upload-title": "Upload Images",
+                "upload-label": "Upload images:",
+                "upload-button": "Upload",
+                "invalid-gate-title": "Invalid Gate Number",
+                "invalid-gate-text": "The gate number you entered is invalid. Please try again."
+            },
+            fr: {
+                "page-title": "Enregistrement du Conducteur",
+                "home-title": "Page d'accueil",
+                "home-key": "Clé : Traduite dans la langue sélectionnée.",
+                "language-title": "Choisissez la Langue",
+                "language-label": "Choisissez une langue :",
+                "next-button": "Suivant",
+                "safety-title": "Consignes de Sécurité",
+                "safety-text": "Veuillez lire et reconnaître les consignes de sécurité ci-dessous :",
+                "instructions-textbox": "1. Respectez les limites de vitesse affichées.\n2. Portez toujours votre ceinture de sécurité en conduisant.\n3. Suivez tous les panneaux et instructions affichés.\n4. Ne téléphonez pas en conduisant.\n5. Signalez immédiatement tout danger ou condition dangereuse.",
+                "initials-label": "Entrez vos initiales pour accuser réception des consignes de sécurité :",
+                "acknowledge-button": "Accuser Réception",
+                "dock-title": "Enter Dock Door Number",
+                "dock-title": "Entrez le Numéro de Quai",
+                "dock-label": "Numéro du Quai :",
+                "submit-dock-button": "Soumettre",
+                "directions-title": "Directions",
+                "directions-text": "Suivez ces instructions pour votre quai :",
+                "upload-title": "Télécharger des Images",
+                "upload-label": "Télécharger des images :",
+                "upload-button": "Télécharger",
+                "invalid-gate-title": "Numéro de Quai Invalide",
+                "invalid-gate-text": "Le numéro de quai que vous avez entré est invalide. Veuillez réessayer."
+            },
+            es: {
+                "page-title": "Registro del Conductor",
+                "home-title": "Página de Inicio",
+                "home-key": "Clave: Traducida al idioma seleccionado.",
+                "language-title": "Seleccionar Idioma",
+                "language-label": "Elige un idioma:",
+                "next-button": "Siguiente",
+                "safety-title": "Normas de Seguridad",
+                "safety-text": "Por favor lea y reconozca las normas de seguridad a continuación:",
+                "instructions-textbox": "1. Respete los límites de velocidad publicados.\n2. Siempre use su cinturón de seguridad mientras conduce.\n3. Siga todas las señales e instrucciones publicadas.\n4. No use su teléfono mientras conduce.\n5. Informe de inmediato cualquier peligro o condición insegura.",
+                "initials-label": "Ingrese sus iniciales para confirmar que ha leído las directrices de seguridad :",
+                "acknowledge-button": "Reconocer",
+                "dock-title": "Enter Dock Door Number",
+                "dock-title": "Ingrese el Número del Muelle",
+                "dock-label": "Número del Muelle:",
+                "submit-dock-button": "Enviar",
+                "directions-title": "Direcciones",
+                "directions-text": "Siga estas direcciones para su muelle:",
+                "upload-title": "Subir Imágenes",
+                "upload-label": "Subir imágenes:",
+                "upload-button": "Subir",
+                "invalid-gate-title": "Número de Muelle Inválido",
+                "invalid-gate-text": "El número de muelle que ingresó es inválido. Por favor, intente de nuevo."
+            }
+        };
+
+        function updateText(language) {
+            document.getElementById('page-title').innerText = translations[language]['page-title'];
+            document.getElementById('home-title').innerText = translations[language]['home-title'];
+            document.getElementById('home-key').innerText = translations[language]['home-key'];
+            document.getElementById('language-title').innerText = translations[language]['language-title'];
+            document.getElementById('language-label').innerText = translations[language]['language-label'];
+            document.getElementById('next-button').innerText = translations[language]['next-button'];
+            document.getElementById('safety-title').innerText = translations[language]['safety-title'];
+            document.getElementById('safety-text').innerText = translations[language]['safety-text'];
+            document.getElementById('instructions-textbox').innerText = translations[language]['instructions-textbox'];
+            document.getElementById('initials-label').innerText = translations[language]['initials-label'];
+            document.getElementById('acknowledge-button').innerText = translations[language]['acknowledge-button'];
+            document.getElementById('dock-title').innerText = translations[language]['dock-title'];
+            document.getElementById('dock-label').innerText = translations[language]['dock-label'];
+            document.getElementById('submit-dock-button').innerText = translations[language]['submit-dock-button'];
+            document.getElementById('directions-title').innerText = translations[language]['directions-title'];
+            document.getElementById('directions-text').innerText = translations[language]['directions-text'];
+            document.getElementById('upload-title').innerText = translations[language]['upload-title'];
+            document.getElementById('upload-label').innerText = translations[language]['upload-label'];
+            document.getElementById('upload-button').innerText = translations[language]['upload-button'];
+            document.getElementById('invalid-gate-title').innerText = translations[language]['invalid-gate-title'];
+            document.getElementById('invalid-gate-text').innerText = translations[language]['invalid-gate-text'];
+        }
+
+        function selectLanguage() {
+            const language = document.getElementById('language-select').value;
+            updateText(language);
+        }
+
+        function goToHome() {
+            document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
+            document.getElementById('home-page').classList.remove('hidden');
+        }
+
+        function goToSafetyGuidelines() {
+            document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
+            document.getElementById('safety-guidelines').classList.remove('hidden');
+        }
+
+        function acknowledgeSafetyGuidelines() {
+            document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
+            document.getElementById('dock-door').classList.remove('hidden');
+        }
+
+        function submitDockNumber() {
+            document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
+            document.getElementById('directions').classList.remove('hidden');
+        }
+
+        function uploadImages() {
+            // Implement your image upload logic here
+            alert('Images uploaded successfully.');
+        }
+
+        function goBack() {
+            document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
+            document.getElementById('dock-door').classList.remove('hidden');
+        }
+
+        // Initialize default language
+        updateText('en');
+    </script>
+</body>
+</html>
